@@ -1,0 +1,6 @@
+/* Projects component styles placeholder */
+
+#projects-container {
+    display: grid;
+    gap: 1rem;
+}
