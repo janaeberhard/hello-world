@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Creative Showcase</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="info-panel">
+        <div class="brand">
+          <span class="pill">Portfolio</span>
+          <h1>Crafting immersive visual stories.</h1>
+        </div>
+        <p>
+          Step into a curated selection of projects, photographed and designed to
+          celebrate color, light, and emotion. Each frame is part of an ongoing
+          exploration of storytelling through digital experiences.
+        </p>
+
+        <div class="meta">
+          <div>
+            <span class="meta-label">Projects</span>
+            <span class="meta-value">8 highlighted</span>
+          </div>
+          <div>
+            <span class="meta-label">Location</span>
+            <span class="meta-value">Remote • Worldwide</span>
+          </div>
+        </div>
+
+        <div class="controls" role="group" aria-label="Slideshow controls">
+          <button class="control" data-direction="prev" aria-label="Previous image">
+            &#8592;
+          </button>
+          <button class="control" data-direction="next" aria-label="Next image">
+            &#8594;
+          </button>
+        </div>
+
+        <div class="timeline" role="tablist" aria-label="Slide selector"></div>
+      </aside>
+
+      <section class="slideshow" aria-live="polite">
+        <div class="slides">
+          <figure class="slide active" data-index="0">
+            <img
+              src="https://images.unsplash.com/photo-1526481280695-3c469128213e?auto=format&fit=crop&w=1800&q=80"
+              alt="Architectural interior with warm lighting"
+            />
+            <figcaption>Atmospheric interior concept</figcaption>
+          </figure>
+          <figure class="slide" data-index="1">
+            <img
+              src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=1800&q=80"
+              alt="Mountain landscape during sunset"
+            />
+            <figcaption>Wanderlust identities in motion</figcaption>
+          </figure>
+          <figure class="slide" data-index="2">
+            <img
+              src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1800&q=80"
+              alt="Modern art installation with neon lights"
+            />
+            <figcaption>Neon geometry exhibition visuals</figcaption>
+          </figure>
+          <figure class="slide" data-index="3">
+            <img
+              src="https://images.unsplash.com/photo-1476900556740-10b8de2d4a2b?auto=format&fit=crop&w=1800&q=80"
+              alt="City skyline at dusk"
+            />
+            <figcaption>Urban skyline brand narrative</figcaption>
+          </figure>
+          <figure class="slide" data-index="4">
+            <img
+              src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1800&q=80"
+              alt="Forest with sunlight streaming through trees"
+            />
+            <figcaption>Immersive eco-resort campaign</figcaption>
+          </figure>
+          <figure class="slide" data-index="5">
+            <img
+              src="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1800&q=80"
+              alt="Designer workspace with devices"
+            />
+            <figcaption>Product interface moodboards</figcaption>
+          </figure>
+          <figure class="slide" data-index="6">
+            <img
+              src="https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=1800&q=80"
+              alt="Hot air balloons over valley"
+            />
+            <figcaption>Adventure travel art direction</figcaption>
+          </figure>
+          <figure class="slide" data-index="7">
+            <img
+              src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1800&q=80"
+              alt="Modern building with reflective windows"
+            />
+            <figcaption>Monochrome architectural study</figcaption>
+          </figure>
+        </div>
+        <div class="gradient"></div>
+      </section>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
