@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full-Screen Image Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Josefin Sans', sans-serif;
+        }
+        
+        body {
+            background-color: #1a1a2e;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        .gallery-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* Project Navigation Panel - YELLOW BOX */
+        .project-nav {
+            position: fixed;
+            top: 50%;
+            left: 40px;
+            transform: translateY(-50%);
+            background: #FFC107;
+            padding: 30px 25px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            max-height: 80vh;
+            overflow-y: auto;
+            width: 350px;
+            scrollbar-width: thin;
+            scrollbar-color: #FFC107 rgba(0, 0, 0, 0.5);
+        }
+        
+        .project-nav-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 20px;
+            border-bottom: 3px solid rgba(0, 0, 0, 0.2);
+            padding-bottom: 15px;
+        }
+        
+        .project-item {
+            padding: 15px 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .project-item:hover {
+            padding-left: 15px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .project-item.active {
+            background: rgba(0, 0, 0, 0.15);
+            border-left: 5px solid #000;
+            padding-left: 15px;
+        }
+        
+        .project-date {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 5px;
+        }
+        
+        .project-title {
+            font-size: 1.05rem;
+            font-weight: 400;
+            color: #222;
+            margin-bottom: 3px;
+        }
+        
+        .project-meta {
+            font-size: 0.85rem;
+            font-weight: 300;
+            color: #555;
+        }
+        
+        .project-nav-buttons {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 3px solid rgba(0, 0, 0, 0.2);
+        }
+        
+        .nav-button {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            color: #FFC107;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Josefin Sans', sans-serif;
+        }
+        
+        .nav-button:hover {
+            background: #333;
+            transform: translateY(-2px);
+        }
+        
+        .project-nav::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .project-nav::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+        }
+        
+        .project-nav::-webkit-scrollbar-thumb {
+            background: #FFC107;
+            border-radius: 10px;
+        }
+        
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .slide.active {
+            opacity: 1;
+        }
+        
+        .slide img,
+        .slide video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .slide-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 40px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            transform: translateY(0);
+            opacity: 0;
+            transition: all 0.5s ease;
+            pointer-events: none;
+        }
+        
+        .slide:hover .slide-content {
+            opacity: 1;
+        }
+        
+        .slide-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        
+        .slide-desc {
+            font-size: 1.2rem;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 600px;
+        }
+        
+        .instructions {
+            display: none;
+        }
+        
+        .progress-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.2);
+            z-index: 10;
+        }
+        
+        .progress {
+            height: 100%;
+            width: 0%;
+            background-color: #FFC107;
+            transition: width 0.3s ease;
+        }
+
+        .click-zones {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            z-index: 5;
+        }
+
+        .click-zone {
+            flex: 1;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .click-zone.left:hover {
+            background: linear-gradient(to right, rgba(255,255,255,0.05), transparent);
+        }
+
+        .click-zone.right:hover {
+            background: linear-gradient(to left, rgba(255,255,255,0.05), transparent);
+        }
+
+        /* Detail Page Styles - Optional */
+        .detail-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: #0f0f1e;
+            z-index: 1000;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .detail-page.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .detail-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 40px;
+            overflow-y: auto;
+        }
+
+        .detail-close {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            font-size: 2.5rem;
+            color: #fff;
+            cursor: pointer;
+            z-index: 10;
+            transition: transform 0.3s ease;
+        }
+
+        .detail-close:hover {
+            transform: rotate(90deg);
+        }
+
+        .detail-image {
+            max-width: 90%;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            margin-bottom: 30px;
+        }
+
+        .detail-info {
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .detail-info h1 {
+            font-size: 3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .detail-info p {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 300;
+        }
+        
+        @media (max-width: 768px) {
+            .project-nav {
+                left: 10px;
+                width: 280px;
+                padding: 20px 15px;
+            }
+            
+            .project-nav-title {
+                font-size: 1.8rem;
+            }
+            
+            .slide-title {
+                font-size: 1.8rem;
+            }
+            
+            .slide-desc {
+                font-size: 1rem;
+            }
+            
+            .instructions {
+                font-size: 0.85rem;
+                top: 20px;
+                right: 20px;
+            }
+
+            .detail-info h1 {
+                font-size: 2rem;
+            }
+
+            .detail-info p {
+                font-size: 1.1rem;
+            }
+
+            .detail-close {
+                font-size: 2rem;
+                top: 20px;
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gallery-container">
+        <!-- YELLOW PROJECT NAVIGATION PANEL -->
+        <div class="project-nav">
+            <h2 class="project-nav-title">Projects</h2>
+            
+            <div class="project-item active" data-slide="0">
+                <div class="project-date">Mar. 15, 2026</div>
+                <div class="project-title">Lorem ipsum dolor sit</div>
+                <div class="project-meta">Amet Consaec, 2025</div>
+            </div>
+            
+            <div class="project-item" data-slide="1">
+                <div class="project-date">Mar. 22, 2026</div>
+                <div class="project-title">Nullam Varius</div>
+                <div class="project-meta">Turpis ET Scelerisque, 2025</div>
+            </div>
+            
+            <div class="project-item" data-slide="2">
+                <div class="project-date">Mar. 23, 2026</div>
+                <div class="project-title">Fusce ID Dui</div>
+                <div class="project-meta">Sit Tellus, 2025</div>
+            </div>
+            
+            <div class="project-item" data-slide="3">
+                <div class="project-date">Aug. 3, 2026</div>
+                <div class="project-title">Tristique Neque</div>
+                <div class="project-meta">Consequat ES, 2025</div>
+            </div>
+            
+            <div class="project-item" data-slide="4">
+                <div class="project-date">Sep. 10, 2026</div>
+                <div class="project-title">Sapien Varius</div>
+                <div class="project-meta">Nunc Studio, 2025</div>
+            </div>
+            
+            <div class="project-item" data-slide="5">
+                <div class="project-date">Oct. 15, 2026</div>
+                <div class="project-title">Praesent Commodo</div>
+                <div class="project-meta">Cursus Magna, 2025</div>
+            </div>
+            
+            <div class="project-item" data-slide="6">
+                <div class="project-date">Nov. 1, 2026</div>
+                <div class="project-title">Vestibulum Ante</div>
+                <div class="project-meta">Ipsum Primis, 2025</div>
+            </div>
+            
+            <div class="project-item" data-slide="7">
+                <div class="project-date">Dec. 5, 2026</div>
+                <div class="project-title">Morbi Leo Risus</div>
+                <div class="project-meta">Porta Consectetur, 2025</div>
+            </div>
+            
+            <div class="project-item" data-slide="8">
+                <div class="project-date">Dec. 20, 2026</div>
+                <div class="project-title">Video Experience</div>
+                <div class="project-meta">Motion Design, 2025</div>
+            </div>
+            
+            <div class="project-nav-buttons">
+                <button class="nav-button" id="kontaktBtn">Kontakt</button>
+            </div>
+        </div>
+        
+        <div class="instructions"></div>
+        
+        <div class="progress-bar">
+            <div class="progress"></div>
+        </div>
+        
+        <!-- Slide 1 -->
+        <div class="slide active" data-slide-id="1">
+            <img src="00_landingpage/01.jpg" alt="Image 01">
+            <div class="slide-content">
+                <h2 class="slide-title">Image 01</h2>
+                <p class="slide-desc">A beautiful view captured in our collection.</p>
+            </div>
+        </div>
+        
+        <!-- Slide 2 -->
+        <div class="slide" data-slide-id="2">
+            <img src="00_landingpage/02.jpg" alt="Image 02">
+            <div class="slide-content">
+                <h2 class="slide-title">Image 02</h2>
+                <p class="slide-desc">Another stunning perspective from our gallery.</p>
+            </div>
+        </div>
+        
+        <!-- Slide 3 -->
+        <div class="slide" data-slide-id="3">
+            <img src="00_landingpage/03.jpg" alt="Image 03">
+            <div class="slide-content">
+                <h2 class="slide-title">Image 03</h2>
+                <p class="slide-desc">Exploring the beauty of nature and architecture.</p>
+            </div>
+        </div>
+        
+        <!-- Slide 4 -->
+        <div class="slide" data-slide-id="4">
+            <img src="00_landingpage/04.jpg" alt="Image 04">
+            <div class="slide-content">
+                <h2 class="slide-title">Image 04</h2>
+                <p class="slide-desc">A moment captured in time, forever preserved.</p>
+            </div>
+        </div>
+        
+        <!-- Slide 5 -->
+        <div class="slide" data-slide-id="5">
+            <img src="00_landingpage/05.jpg" alt="Image 05">
+            <div class="slide-content">
+                <h2 class="slide-title">Image 05</h2>
+                <p class="slide-desc">The interplay of light and shadow creates magic.</p>
+            </div>
+        </div>
+        
+        <!-- Slide 6 -->
+        <div class="slide" data-slide-id="6">
+            <img src="00_landingpage/06.jpg" alt="Image 06">
+            <div class="slide-content">
+                <h2 class="slide-title">Image 06</h2>
+                <p class="slide-desc">Discovering hidden gems in everyday scenes.</p>
+            </div>
+        </div>
+        
+        <!-- Slide 7 -->
+        <div class="slide" data-slide-id="7">
+            <video muted loop playsinline preload="metadata">
+                <source src="00_landingpage/07.mov" type="video/quicktime">
+                Your browser does not support the video tag.
+            </video>
+            <div class="slide-content">
+                <h2 class="slide-title">Image 07</h2>
+                <p class="slide-desc">Where creativity meets reality in perfect harmony.</p>
+            </div>
+        </div>
+        
+        <!-- Slide 8 -->
+        <div class="slide" data-slide-id="8">
+            <img src="00_landingpage/08.jpg" alt="Image 08">
+            <div class="slide-content">
+                <h2 class="slide-title">Image 08</h2>
+                <p class="slide-desc">The final piece in our visual journey collection.</p>
+            </div>
+        </div>
+        
+        <!-- Video Slide 9 -->
+        <div class="slide" data-slide-id="9">
+            <video muted loop>
+                <source src="00_landingpage/09.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="slide-content">
+                <h2 class="slide-title">Video 09</h2>
+                <p class="slide-desc">An immersive video experience to complement our visual journey.</p>
+            </div>
+        </div>
+
+        <!-- Click zones for navigation -->
+        <div class="click-zones">
+            <div class="click-zone left" id="prevZone"></div>
+            <div class="click-zone right" id="nextZone"></div>
+        </div>
+    </div>
+
+    <!-- Detail Page -->
+    <div class="detail-page" id="detailPage">
+        <div class="detail-close" id="closeDetail">&times;</div>
+        <div class="detail-content">
+            <img class="detail-image" id="detailImage" src="" alt="">
+            <div class="detail-info">
+                <h1 id="detailTitle"></h1>
+                <p id="detailDesc"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.slide');
+            const progressBar = document.querySelector('.progress');
+            const prevZone = document.getElementById('prevZone');
+            const nextZone = document.getElementById('nextZone');
+            const projectItems = document.querySelectorAll('.project-item');
+            const kontaktBtn = document.getElementById('kontaktBtn');
+            const detailPage = document.getElementById('detailPage');
+            const closeDetail = document.getElementById('closeDetail');
+            const detailImage = document.getElementById('detailImage');
+            const detailTitle = document.getElementById('detailTitle');
+            const detailDesc = document.getElementById('detailDesc');
+            
+            let currentSlide = 0;
+            
+            // Function to show a specific slide
+            function showSlide(index) {
+                document.querySelectorAll('.slide video').forEach(video => {
+                    if (video.parentElement !== slides[index]) {
+                        video.pause();
+                    }
+                });
+                
+                slides.forEach(slide => slide.classList.remove('active'));
+                projectItems.forEach(item => item.classList.remove('active'));
+                
+                slides[index].classList.add('active');
+                projectItems[index].classList.add('active');
+                
+                const video = slides[index].querySelector('video');
+                if (video) {
+                    video.play().catch(e => {
+                        console.log("Video autoplay prevented:", e);
+                    });
+                }
+                
+                progressBar.style.width = `${((index + 1) / slides.length) * 100}%`;
+                currentSlide = index;
+            }
+            
+            function prevSlide() {
+                let prev = (currentSlide - 1 + slides.length) % slides.length;
+                showSlide(prev);
+            }
+            
+            function nextSlide() {
+                let next = (currentSlide + 1) % slides.length;
+                showSlide(next);
+            }
+            
+            // Handle clicks with double-click detection
+            let lastClickTime = 0;
+            const doubleClickDelay = 300;
+            
+            prevZone.addEventListener('click', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                
+                const currentTime = new Date().getTime();
+                const timeDiff = currentTime - lastClickTime;
+                
+                if (timeDiff < doubleClickDelay && timeDiff > 0) {
+                    console.log('Doppelklick erkannt! Öffne Detail-Seite...');
+                    const slideId = slides[currentSlide].getAttribute('data-slide-id');
+                    window.location.href = `details/image${slideId}.html`;
+                } else {
+                    setTimeout(() => {
+                        const checkTime = new Date().getTime();
+                        if (checkTime - currentTime >= doubleClickDelay) {
+                            prevSlide();
+                        }
+                    }, doubleClickDelay);
+                }
+                
+                lastClickTime = currentTime;
+            });
+            
+            nextZone.addEventListener('click', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                
+                const currentTime = new Date().getTime();
+                const timeDiff = currentTime - lastClickTime;
+                
+                if (timeDiff < doubleClickDelay && timeDiff > 0) {
+                    console.log('Doppelklick erkannt! Öffne Detail-Seite...');
+                    const slideId = slides[currentSlide].getAttribute('data-slide-id');
+                    window.location.href = `details/image${slideId}.html`;
+                } else {
+                    setTimeout(() => {
+                        const checkTime = new Date().getTime();
+                        if (checkTime - currentTime >= doubleClickDelay) {
+                            nextSlide();
+                        }
+                    }, doubleClickDelay);
+                }
+                
+                lastClickTime = currentTime;
+            });
+            
+            // Project item clicks - single click to navigate, double click to open detail page
+            projectItems.forEach((item, index) => {
+                // Single click - navigate to slide
+                item.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    showSlide(index);
+                });
+                
+                // Double click - open detail page
+                item.addEventListener('dblclick', function(e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    const slideId = slides[index].getAttribute('data-slide-id');
+                    console.log('Öffne Detail-Seite für Projekt:', slideId);
+                    window.location.href = `details/image${slideId}.html`;
+                });
+            });
+            
+            // Kontakt button handler
+            kontaktBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                window.location.href = 'kontakt.html';
+            });
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowLeft') {
+                    prevSlide();
+                } else if (e.key === 'ArrowRight') {
+                    nextSlide();
+                }
+            });
+            
+            progressBar.style.width = `${(1 / slides.length) * 100}%`;
+        });
+    </script>
+</body>
+</html>
