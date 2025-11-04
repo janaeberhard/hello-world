@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atelier Andrea - Jan Andrea Aeberhard</title>
+    <meta name="description" content="Kreative Projekte und Arbeiten von Jan Andrea Aeberhard">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/components/header.css">
+    <link rel="stylesheet" href="css/components/navigation.css">
+    <link rel="stylesheet" href="css/components/gallery.css">
+    <link rel="stylesheet" href="css/components/projects.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loadingScreen">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Background Section -->
+    <div class="background" id="background">
+        <!-- Background images will be loaded dynamically -->
+    </div>
+
+    <!-- Header Section -->
+    <div class="content-card">
+        <h1 class="title">Atelier Andrea</h1>
+        <div class="subtitle">Jan Andrea Aeberhard</div>
+        
+        <!-- Projects will be loaded here dynamically -->
+        <div id="projects-container"></div>
+        
+        <div class="footer-links">
+            <a href="#kontakt" id="contactLink">Kontakt</a>
+            <a href="https://instagram.com" target="_blank" rel="noopener">Instagram</a>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="social-bar">
+        <a href="https://youtube.com" class="social-icon" title="YouTube" target="_blank" rel="noopener">▶</a>
+        <a href="mailto:kontakt@atelier-andrea.ch" class="social-icon" title="E-Mail">@</a>
+        <a href="https://instagram.com" class="social-icon" title="Instagram" target="_blank" rel="noopener">📷</a>
+        <a href="#mehr" class="social-icon" title="Mehr">+</a>
+    </div>
+
+    <!-- Gallery View -->
+    <div class="gallery-view" id="galleryView">
+        <button class="close-gallery" id="closeGallery" aria-label="Galerie schließen">×</button>
+        <div class="gallery-counter" id="galleryCounter">1 / 0</div>
+        <div id="gallery-container"></div>
+    </div>
+
+    <!-- Project Detail View -->
+    <div class="project-view" id="projectView">
+        <div class="project-header">
+            <h2 class="project-title" id="projectTitle">Projekt Titel</h2>
+            <button class="close-project" id="closeProject" aria-label="Projekt schließen">×</button>
+        </div>
+        <div class="project-content">
+            <div class="project-images" id="projectImages"></div>
+            <div class="project-description" id="projectDescription"></div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
