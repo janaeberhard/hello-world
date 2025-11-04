@@ -539,6 +539,7 @@
             const progressBar = document.querySelector('.progress');
             const prevZone = document.getElementById('prevZone');
             const nextZone = document.getElementById('nextZone');
+            const projectNav = document.querySelector('.project-nav');
             const projectItems = document.querySelectorAll('.project-item');
             const kontaktBtn = document.getElementById('kontaktBtn');
             const detailPage = document.getElementById('detailPage');
@@ -651,6 +652,16 @@
                     window.location.href = `details/image${slideId}.html`;
                 });
             });
+            
+            // Double click anywhere in the project navigation box to open detail page
+            if (projectNav) {
+                projectNav.addEventListener('dblclick', function(e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    const slideId = slides[currentSlide].getAttribute('data-slide-id');
+                    window.location.href = `details/image${slideId}.html`;
+                });
+            }
             
             // Kontakt button handler
             kontaktBtn.addEventListener('click', function(e) {
